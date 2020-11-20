@@ -1,3 +1,14 @@
+# Sights in California Server
+
+<h4>This is the back-end server for the Sights in California.</h4>
+<h4>Built using Node.js, Express, and PostgreSQL.</h4>
+<h4>Testing was done using Chai and Supertest.</h4>
+<h4>The server is currently deployed to Heroku.</h4>
+
+<ul>
+<li>Run 'npm run migrate' to create tables</li>
+<li>'npm run dev' to run the server</li>
+</ul>
 # Express Boilerplate!
 
 This is a boilerplate project used for starting new projects!
