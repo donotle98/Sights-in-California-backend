@@ -46,7 +46,7 @@ usersRouter
             password: hashedPassword,
             city: xss(req.body.city),
         };
-        usersService.addUser(req.app.get("db"), newUser).catch(next);
+        usersService.addUser(req.app.get("db"), newUser);
         const user = {
             username: xss(req.body.username),
             password: hashedPassword,
