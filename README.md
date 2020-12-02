@@ -9,6 +9,39 @@
 <li>Run 'npm run migrate' to create tables</li>
 <li>'npm run dev' to run the server</li>
 </ul>
+
+<br />
+<br />
+
+<a href="https://sightsincali.donotle98.vercel.app/">Link to live site</a>
+
+<br />
+<br />
+
+<h1>API Documentation</h1>
+> GET '/api/login/'
+<p>This route is used to create tokens for users logging in and signing up</p>
+> GET '/api/login/:username
+<p>Once the path is called the user's token will be compared to the token created, and if the token is correct, the user will be fetched</p>
+> GET '/api/bookmarks
+<p>Will retrieve all the bookmarks</p>
+> POST '/api/bookmarks/'
+<p>Post a bookmark needing just users first name and id of the sight</p>
+> GET '/api/bookmarks/:first_name'
+<p>Get bookmarks for a specific user</p>
+> DELETE '/api/bookmarks/:sightid
+<p>Delete the certain bookmark</p>
+> GET '/api/sights/'
+<p>Get all sight cards</p>
+> POST '/api/sights'
+<p>Post to the sight database needing only name, description, url</p>
+> GET '/api/sight/:city'
+<p>Get all sights by a certain city</p>
+> POST '/api/users/'
+<p>Add a user to the database only needing first name, city, username, and password</p>
+> GET '/api/users/:username'
+<p>Get user by username</p>
+
 # Express Boilerplate!
 
 This is a boilerplate project used for starting new projects!
