@@ -1,12 +1,12 @@
-const express = require("express");
-const xss = require("xss");
-const logger = require("../logger");
-const usersService = require("./users-service");
-const sanitizer = require("sanitize")();
-const jwt = require("jsonwebtoken");
+const express = require('express');
+const xss = require('xss');
+const logger = require('../logger');
+const usersService = require('./users-service');
+const sanitizer = require('sanitize')();
+const jwt = require('jsonwebtoken');
 
-const bcrypt = require("bcrypt");
-const { JsonWebTokenError } = require("jsonwebtoken");
+const bcrypt = require('bcrypt');
+const { JsonWebTokenError } = require('jsonwebtoken');
 
 const usersRouter = express.Router();
 const bodyParser = express.json();
@@ -20,16 +20,16 @@ const serializeUser = (user) => ({
 });
 
 usersRouter
-    .route("/")
+    .route('/')
     .get((req, res, next) => {
-        const knex = req.app.get("db");
+        const knex = req.app.get('db');
         usersService
             .getAllUsers(knex)
             .then((users) => res.json(users.map(serializeUser)))
             .catch(next);
     })
     .post(bodyParser, async (req, res, next) => {
-        for (const field of ["first_name", "username", "password", "city"]) {
+        for (const field of ['first_name', 'username', 'password', 'city']) {
             if (!req.body[field]) {
                 logger.error(`${field} is missing for user post`);
                 return res
@@ -46,29 +46,26 @@ usersRouter
             password: hashedPassword,
             city: xss(req.body.city),
         };
-        usersService.addUser(req.app.get("db"), newUser);
-        const user = {
-            username: xss(req.body.username),
-            password: hashedPassword,
-        };
+        usersService.addUser(req.app.get('db'), newUser);
         jwt.sign(
-            { user: user },
-            "secretKey",
-            { expiresIn: "24h" },
+            { user: newUser },
+            'secretKey',
+            { expiresIn: '24h' },
             (err, token) => {
                 console.log(token);
                 res.send({
                     token,
+                    newUser,
                 });
             }
         );
     });
 
 usersRouter
-    .route("/:username")
+    .route('/:username')
     .all((req, res, next) => {
         const { username } = req.params;
-        const knex = req.app.get("db");
+        const knex = req.app.get('db');
         usersService
             .getUserByUsername(knex, username)
             .then((user) => {
@@ -76,7 +73,7 @@ usersRouter
                     logger.error(`User with username ${username} not found`);
                     return res
                         .status(400)
-                        .json({ error: { message: "User not found" } });
+                        .json({ error: { message: 'User not found' } });
                 }
                 res.user = user;
                 next();
@@ -89,7 +86,7 @@ usersRouter
     .delete((req, res, next) => {
         const { username } = req.params;
         usersService
-            .deleteUser(req.app.get("db"), username)
+            .deleteUser(req.app.get('db'), username)
             .then(() => {
                 logger.info(`note with id ${username} deleted`);
                 res.status(204).end();
@@ -99,15 +96,15 @@ usersRouter
     .patch(bodyParser, (req, res, next) => {
         const userUpdate = req.body;
         const userUpdates = xss(userUpdate);
-        console.log("userUpdates ", userUpdates);
+        console.log('userUpdates ', userUpdates);
         if (Object.keys(userUpdates).length === 0) {
-            logger.info("user must have values to update");
+            logger.info('user must have values to update');
             return res.status(400).json({
-                error: { message: "patch request must supply values" },
+                error: { message: 'patch request must supply values' },
             });
         }
         usersService
-            .updateUser(req.app.get("db"), res.user.id, userUpdates)
+            .updateUser(req.app.get('db'), res.user.id, userUpdates)
             .then((updatedUser) => {
                 logger.info(`note with id ${res.user.id} updated`);
                 res.status(204).end();
